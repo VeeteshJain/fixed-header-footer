@@ -4,15 +4,13 @@ app.directive('tableFixedHeaderFooter',['$timeout','$document','$window',functio
   function link(scope , el , attrs){
     console.log('all ok');
     var clonedNode = el.clone();
+    var colWidth = [];
     clonedNode.find('tbody').empty();
     headerFooter = [clonedNode.clone(),clonedNode.clone()];
-    var clonedNodeHeader = el.clone();
-    var clonedNodeFooter = el.clone();
     var type = attrs.tableFixedHeaderFooter.split('-');
-    
     angular.forEach(type , function(v , i ){
       switch(v){
-        case 'footer':
+        case 'tfoot':
           headerFooter[i].find('thead').empty();
         break;
         default:
@@ -20,19 +18,11 @@ app.directive('tableFixedHeaderFooter',['$timeout','$document','$window',functio
         headerFooter[i].find('tfoot').empty();
         break;
       }
-      if(v === 'header'){
-      //clonedNode.find('tbody').empty();
-      //clonedNode.find('tfoot').empty();
-      clonedNodeHeader.find('tbody').empty();
-      clonedNodeHeader.find('tfoot').empty();
-    }else if(v === 'footer'){
-      //clonedNode.find('tbody').empty();
-      //clonedNode.find('thead').empty();
-      clonedNodeFooter.find('tbody').empty();
-      clonedNodeFooter.find('thead').empty();
-    }
+      angular.forEach(headerFooter[i].find(v+' tr:first th'), function(v , i){
+        debugger;
+        angular.element(v).attr('ng-style','{width:colWidth['+i+']}');
+      });
     });
-    debugger;
     //append to body
     angular.element('body').append(headerFooter);
     //cloning the current element properties
@@ -44,6 +34,7 @@ app.directive('tableFixedHeaderFooter',['$timeout','$document','$window',functio
       position:'absolute',
       offset:{'top':'',left:''}
     };
+    debugger;
     //for header
     options.offset = el.offset();
     if(options.offset.top < $window.pageYOffset && $window.pageYOffset < el.find('tfoot').offset().top ){
@@ -57,7 +48,8 @@ app.directive('tableFixedHeaderFooter',['$timeout','$document','$window',functio
       top:options.offset.top,
       left:options.offset.left,
       margin:0,
-      'z-index':2000
+      'z-index':2000,
+      'background-color':'red'
     });
     options = {
       width:'',
@@ -79,7 +71,12 @@ app.directive('tableFixedHeaderFooter',['$timeout','$document','$window',functio
       top:options.offset.top,
       left:options.offset.left,
       margin:0,
-      'z-index':2000
+      'z-index':2000,
+      'background-color':'red'
+    });
+    angular.forEach(el.find('tbody tr:first td'), function(v , i){
+      debugger;
+      
     });
     
     console.log('reposition');
