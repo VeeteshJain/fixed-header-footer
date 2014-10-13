@@ -1,7 +1,36 @@
 var app = angular.module('plunker', ['ui.bootstrap']);
 
 app.directive('tableFixedHeaderFooter',['$timeout','$document','$window','$compile',function($timeout,$document,$window,$compile){
-  function link(scope , el , attrs){
+  function link(scope , el , attrs , ngModel){
+    debugger;
+    if(!ngModel){
+      return;
+    }
+    ngModel.$render = function() {
+      debugger;
+      //element.html($sce.getTrustedHtml(ngModel.$viewValue || ''));
+    };
+    var w = angular.element($window);
+    w.on('resize', function() {
+      debugger;
+      scope.$apply(read);
+    });
+    read();
+    function read(){
+      debugger;
+      var html = el.html();
+      var columnWidth = [];
+      angular.forEach(el.find('tbody tr:first td') , function(v , i){
+        var value = angular.element(v);
+        columnWidth[i] = value.outerWidth();
+
+      });
+      // When we clear the content editable the browser leaves a <br> behind
+      // If strip-br attribute is provided then we strip this out
+      
+      ngModel.$setViewValue(columnWidth);
+    }
+
     console.log('all ok');
     var clonedNode = el.clone();
     scope.colWidth = [12,12,12,12];
@@ -97,10 +126,16 @@ app.directive('tableFixedHeaderFooter',['$timeout','$document','$window','$compi
       console.log('scroll');
       reposition();
     });
+    var win = angular.element($window);
+    win.bind('resize', function(event){
+      console.log('resize');
+      reposition();
+    });
   }
   return{
     restrict: 'EA',
-    link: link
+    link: link,
+    require: '?ngModel'
   };
 }]);
 
@@ -142,3 +177,4 @@ function EditCtrl($scope, item, dialog){
     dialog.close(undefined);
   };
 }
+
