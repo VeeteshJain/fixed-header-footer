@@ -33,10 +33,36 @@ app.directive('tableFixedHeaderFooter',['$timeout','$document','$window','$compi
 
     console.log('all ok');
     var clonedNode = el.clone();
+    scope.options = {
+      header:{
+        colWidth : [12,12,12,12],
+        tableWidth:0,
+        position:'absolute',
+        top:0,
+        left:0,
+        'z-index':2000,
+        margin:0,
+        'background-color':'red'
+      },
+      footer:{
+        colWidth : [12,12,12,12],
+        tableWidth:0,
+        position:'absolute',
+        top:0,
+        left:0,
+        'z-index':2000,
+        margin:0,
+        'background-color':'red'
+        }
+    };
     scope.colWidth = [12,12,12,12];
     clonedNode.find('tbody').empty();
+    debugger;
     clonedNode.removeAttr('table-fixed-header-footer').removeAttr('refresh');
-    headerFooter = [clonedNode.clone(),clonedNode.clone()];
+    var ngStyleHeader = '{width:options.header.tableWidth , position:options.header.position , top:options.header.top , left:options.header.left , margin:options.header.margin , "z-index":options.header["z-index"] , "background-color":options.header["background-color"]}';
+    var ngStyleFooter = '{width:options.footer.tableWidth , position:options.footer.position , top:options.footer.top , left:options.footer.left , margin:options.footer.margin , "z-index":options.footer["z-index"] , "background-color":options.footer["background-color"]}';
+    //clonedNode.attr('ng-style','{width:options.tableWidth , position:options.position , top:options.top , left:options.left , margin:options.margin , "z-index":options["z-index"] , "background-color":options["background-color"]}');
+    headerFooter = [clonedNode.clone().attr('ng-style',ngStyleHeader),clonedNode.clone().attr('ng-style',ngStyleFooter)];
     var type = attrs.tableFixedHeaderFooter.split('-');
     angular.forEach(type , function(v , i ){
       switch(v){
@@ -49,7 +75,11 @@ app.directive('tableFixedHeaderFooter',['$timeout','$document','$window','$compi
         break;
       }
       angular.forEach(headerFooter[i].find(v+' tr:first th'), function(v , i){
-        angular.element(v).attr('ng-style','{width:colWidth['+i+']}');
+        if(i===0){
+          angular.element(v).attr('ng-style','{width:options.header.colWidth['+i+']}');
+        }else{
+          angular.element(v).attr('ng-style','{width:options.footer.colWidth['+i+']}');
+        }
       });
     });
     //append to body
