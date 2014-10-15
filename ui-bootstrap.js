@@ -969,7 +969,7 @@ angular.module('ui.bootstrap.position', [])
             };
             break;
         }
-
+        debugger;
         return targetElPos;
       }
     };
