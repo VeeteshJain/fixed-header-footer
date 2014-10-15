@@ -639,7 +639,21 @@
             <td>{{item.id}} {{ddate.now() | date:'hh:mm:ss'}}</td>
             <td>{{item.firstName}}</td>
             <td>{{item.lastName}}</td>
-            <td><button class="btn btn-primary" ng-click="edit(item)">Edit</button></td>
+            <td><button class="btn btn-primary" ng-click="edit(item)">Edit</button>
+            <div class="btn-group" dropdown is-open="item.status.isopen">
+              <button type="button" class="btn btn-primary dropdown-toggle" ng-click='toggleDropdown($event,$index,item)'>
+                Button dropdown {{$index}}<span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">Disable</a></li>
+              </ul>
+            </div>
+            </td>
           </tr>
         </div>
         </tbody>
